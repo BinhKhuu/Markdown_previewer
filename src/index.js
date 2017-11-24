@@ -1,7 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+var MarkdownIt = require('markdown-it')
 
+class RawText extends React.Component {
+  render() {
+    return (
+      <textarea onChange={this.props.handleKeyPress} id='markdown-box' rows='22' type='text' class='form-control' value={this.props.state} ></textarea>
+      );
+  }
+}
+
+class Markup extends React.Component {
+  createMarkup() {
+
+    var md = new MarkdownIt()
+    return {__html: md.render(this.props.state)};
+  }
+  render() {
+    return (   
+      <div dangerouslySetInnerHTML={this.createMarkup()} />
+      );
+  }
+}
 class TextBox extends React.Component {
   constructor() {
     super();
@@ -27,11 +48,11 @@ class TextBox extends React.Component {
         <div className='row background'>
           <div className='col-6'>
             <div className='float-right'>
-              <textarea onChange={this.handleKeyPress} id='markdown-box' rows='22' type='text' class='form-control' value={this.state.value} ></textarea>
+              <RawText handleKeyPress={this.handleKeyPress} state={this.state.value}/>
             </div>
           </div>
           <div className='col-6'>
-              <textarea id='preview-box' rows='22' type='text' class='form-control' value={this.state.value} disabled>this.state.value</textarea> 
+              <Markup state={this.state.value}/>
           </div>
         </div>
       //</div>
@@ -46,8 +67,3 @@ ReactDOM.render(
   <TextBox />,
   document.getElementById('root')
 );
-
-
-//create a custom preivew div
-//convert text from usr input to markdown text in preivew
-
